@@ -2,46 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Child Games Unity Things</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<div class="container">
-
-    <header>
-        <h1>Child Games Unity Things</h1>
-        <p class="copyright">
-            © 2026 Child Games. All Rights Reserved. Nothing on this website may be distributed without permission. If something requires credits in your game you must add it. Do not remove the credits from the code
-        </p>
-    </header>
-
-    <section id="slideshow">
-        <button class="nav-btn" onclick="prevSlide()">◀</button>
-        <div id="slideContent"></div>
-        <button class="nav-btn" onclick="nextSlide()">▶</button>
-    </section>
-
-    <nav class="tabs">
-        <button onclick="openTab('Scripts')">Scripts</button>
-        <button onclick="openTab('Packages')">Packages</button>
-        <button onclick="openTab('Models')">Models</button>
-        <button onclick="openTab('Materials')">Materials</button>
-    </nav>
-
-    <main id="content"></main>
-
-    <section id="detailView" class="hidden">
-        <button class="back-btn" onclick="goBack()">← Back</button>
-        <h2 id="detailTitle"></h2>
-        <p id="detailDesc"></p>
-        <a id="downloadBtn" download>Download</a>
-    </section>
-
+<!-- HEADER -->
+<div class="header">
+    <h1>Child Games Unity Things</h1>
+    <p class="credits">
+        © 2026 Child Games. All Rights Reserved. Nothing on this website may be distributed without permission. 
+        If something requires credits in your game you must add it. Do not remove the credits from the code
+    </p>
 </div>
 
-<script src="script.js"></script>
+<!-- TABS -->
+<div class="tabs">
+    <button onclick="switchTab('home')">Home</button>
+    <button onclick="switchTab('Scripts')">Scripts</button>
+    <button onclick="switchTab('Packages')">Packages</button>
+    <button onclick="switchTab('Models')">Models</button>
+    <button onclick="switchTab('Materials')">Materials</button>
+</div>
 
+<!-- MAIN CONTENT -->
+<div id="content"></div>
+
+<script src="script.js"></script>
 </body>
 </html>
