@@ -1,110 +1,131 @@
-const database = {
-  Scripts: [],
-  Packages: [],
-  Models: [],
-  Materials: []
+const filesData = {
+    Scripts: [],
+    Packages: [],
+    Models: [],
+    Materials: []
 };
 
-// STATE
-let currentTab = "Home";
-let currentList = [];
-let historyStack = [];
+let currentTab = "home";
+let currentSlide = 0;
 
-// FLATTEN ALL ITEMS FOR HOME
-function getAllItems() {
-  return Object.keys(database).flatMap(category =>
-    database[category].map(item => ({ ...item, category }))
-  );
+function switchTab(tab) {
+    currentTab = tab;
+    render();
 }
 
-// SLIDESHOW
-let slideIndex = 0;
+/* ---------------- HOME SLIDESHOW ---------------- */
 
-function renderSlide() {
-  const items = getAllItems();
-  const container = document.getElementById("slideContent");
+function getAllFiles() {
+    let all = [];
+    for (let cat in filesData) {
+        filesData[cat].forEach(f => {
+            all.push({ ...f, category: cat });
+        });
+    }
+    return all;
+}
 
-  if (items.length === 0) {
-    container.innerHTML = "Nothing Here Yet";
-    return;
-  }
+function renderHome() {
+    const files = getAllFiles();
 
-  const item = items[slideIndex];
+    if (files.length === 0) {
+        document.getElementById("content").innerHTML = "<h2 style='text-align:center;'>Nothing Is Here Yet</h2>";
+        return;
+    }
 
-  container.innerHTML = `
-    <strong>${item.name}</strong>
-    <p>${item.description}</p>
-    <button onclick="openDetail('${item.category}', ${slideIndex})">View</button>
-  `;
+    const file = files[currentSlide % files.length];
+
+    document.getElementById("content").innerHTML = `
+        <div class="slideshow">
+            <h2>Featured Downloads</h2>
+
+            <div class="slideshow-box">
+                <h3>${file.name}</h3>
+                <p>${file.description}</p>
+                <a href="files/${file.category}/${file.file}" download>
+                    <button>Download</button>
+                </a>
+            </div>
+
+            <div class="nav-btns">
+                <button onclick="prevSlide()">Back</button>
+                <button onclick="nextSlide()">Next</button>
+            </div>
+        </div>
+    `;
 }
 
 function nextSlide() {
-  const items = getAllItems();
-  if (items.length === 0) return;
-
-  slideIndex = (slideIndex + 1) % items.length;
-  renderSlide();
+    currentSlide++;
+    renderHome();
 }
 
 function prevSlide() {
-  const items = getAllItems();
-  if (items.length === 0) return;
-
-  slideIndex = (slideIndex - 1 + items.length) % items.length;
-  renderSlide();
+    currentSlide--;
+    if (currentSlide < 0) currentSlide = getAllFiles().length - 1;
+    renderHome();
 }
 
-// AUTO ROTATE
-setInterval(nextSlide, 15000);
+/* ---------------- CATEGORY VIEW ---------------- */
 
-// TABS
-function openTab(tab) {
-  currentTab = tab;
-  historyStack.push("home");
+function renderCategory(cat) {
+    const list = filesData[cat];
 
-  const content = document.getElementById("content");
-  const detail = document.getElementById("detailView");
+    if (!list || list.length === 0) {
+        document.getElementById("content").innerHTML = "<h2 style='text-align:center;'>Nothing Is Here Yet</h2>";
+        return;
+    }
 
-  detail.classList.add("hidden");
-  content.innerHTML = "";
+    let html = `<div class="list">`;
 
-  const items = database[tab];
+    list.forEach((item, i) => {
+        html += `
+            <div class="item">
+                <h3>${item.name}</h3>
+                <p>${item.description}</p>
+                <button onclick="openDetail('${cat}', ${i})">Open</button>
+            </div>
+        `;
+    });
 
-  if (!items || items.length === 0) {
-    content.innerHTML = "<p>Nothing Is Here Yet</p>";
-    return;
-  }
-
-  items.forEach((item, index) => {
-    const div = document.createElement("div");
-    div.className = "item";
-    div.innerHTML = `<strong>${item.name}</strong><br>${item.description}`;
-    div.onclick = () => openDetail(tab, index);
-    content.appendChild(div);
-  });
+    html += `</div>`;
+    document.getElementById("content").innerHTML = html;
 }
 
-// DETAIL VIEW
-function openDetail(category, index) {
-  const item = database[category][index];
+/* ---------------- DETAIL PAGE ---------------- */
 
-  document.getElementById("content").innerHTML = "";
-  const detail = document.getElementById("detailView");
+function openDetail(cat, index) {
+    const item = filesData[cat][index];
 
-  detail.classList.remove("hidden");
+    document.getElementById("content").innerHTML = `
+        <div class="detail">
+            <h2>${item.name}</h2>
+            <p>${item.description}</p>
 
-  document.getElementById("detailTitle").innerText = item.name;
-  document.getElementById("detailDesc").innerText = item.description;
+            <a href="files/${cat}/${item.file}" download>
+                <button>Download</button>
+            </a>
 
-  document.getElementById("downloadBtn").href =
-    `files/${category.toLowerCase()}/${item.file}`;
+            <br><br>
+            <button onclick="render()">Go Back</button>
+        </div>
+    `;
 }
 
-// BACK
-function goBack() {
-  document.getElementById("detailView").classList.add("hidden");
-  openTab(currentTab);
+/* ---------------- MAIN RENDER ---------------- */
+
+function render() {
+    if (currentTab === "home") renderHome();
+    else renderCategory(currentTab);
 }
 
-// INIT
-renderSlide();
+/* AUTO SLIDESHOW */
+setInterval(() => {
+    if (currentTab === "home") {
+        currentSlide++;
+        renderHome();
+    }
+}, 15000);
+
+/* INIT */
+render();
