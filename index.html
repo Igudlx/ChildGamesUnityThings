@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Child Games Unity Things</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h1>Child Games Unity Things</h1>
+    <p class="copyright">
+        © 2026 Child Games. All Rights Reserved. Nothing on this website may be distributed without permission. If something requires credits in your game you must add it. Do not remove the credits from the code
+    </p>
+
+    <!-- HOME SLIDESHOW -->
+    <div id="slideshow">
+        <button onclick="prevSlide()">◀</button>
+        <div id="slideContent"></div>
+        <button onclick="nextSlide()">▶</button>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+        <button onclick="openTab('Scripts')">Scripts</button>
+        <button onclick="openTab('Packages')">Packages</button>
+        <button onclick="openTab('Models')">Models</button>
+        <button onclick="openTab('Materials')">Materials</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div id="content"></div>
+
+    <!-- DETAIL VIEW -->
+    <div id="detailView" class="hidden">
+        <button onclick="goBack()">← Back</button>
+        <h2 id="detailTitle"></h2>
+        <p id="detailDesc"></p>
+        <a id="downloadBtn" download>Download</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
